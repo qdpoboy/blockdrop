@@ -2,7 +2,6 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
-        //#4cb4e7 ffc09f c7b3e5 588c7e a3a380
         blockNode: cc.Node,
         step1Node: [cc.Node],
         step2Node: [cc.Node],
@@ -22,6 +21,7 @@ cc.Class({
         this.gameState = 1;
         this.setInitColor();
         this.setInitBlock();
+        this.setInitStep();
     },
 
     grow() {
@@ -93,6 +93,23 @@ cc.Class({
                 cc.scaleTo(0.3, 1),
                 cc.rotateTo(0.3, 45),
             )
+        );
+    },
+
+    //初始化台阶位置
+    setInitStep() {
+        let disX = 20 - Math.random() * 40;
+        this.step1Node[0].runAction(
+            cc.moveBy(0.1, cc.v2(- disX, 0)),
+        );
+        this.step1Node[1].runAction(
+            cc.moveBy(0.1, cc.v2(disX, 0)),
+        );
+        this.step2Node[0].runAction(
+            cc.moveBy(0.1, cc.v2(- disX, 0)),
+        );
+        this.step2Node[1].runAction(
+            cc.moveBy(0.1, cc.v2(disX, 0)),
         );
     },
 
