@@ -153,7 +153,7 @@ cc.Class({
     update (dt) {
         if (this.gameState == 2) {
             this.growTimer += dt;
-            this.growTimerLabel.getComponent(cc.Label).string = this.growTimer.toFixed(2);// 保留两位小数
+            this.growTimerLabel.getComponent(cc.Label).string = this.growTimer.toFixed(2);//保留两位小数
         }
     },
 });
