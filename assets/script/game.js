@@ -6,6 +6,8 @@ cc.Class({
         step1Node: [cc.Node],
         step2Node: [cc.Node],
         scoreLabel: cc.Label,
+        growTimerLabel: cc.Label,
+        scoreLevelLabel: cc.Label,
     },
 
     onLoad() {
@@ -16,9 +18,17 @@ cc.Class({
         this.init();
     },
 
+    onDestroy() {
+        this.node.off('touchstart', this.grow, this);
+        this.node.off('touchend', this.stop, this);
+    },
+
     init() {
         // 1 初始化状态 2 放大中 3 旋转中 4 下落中
         this.gameState = 1;
+        this.growTimer = 0.00;
+        this.growTimerLabel.getComponent(cc.Label).string = '0.00';
+        //this.scoreLevelLabel.getComponent(cc.Label).string = '';
         this.setInitColor();
         this.setInitBlock();
         this.setInitStep();
@@ -55,6 +65,7 @@ cc.Class({
                 let win = false;
                 if (blockWidth <= step2SpaceWidth) {//进坑，得分
                     win = true;
+                    this.showWinLevel(blockWidth, step2SpaceWidth);
                     blockY = -(cc.winSize.height / 2 - this.step1Node[1].height - this.blockNode.height * this.blockNode.scaleX / 2);
                 } else {//落在最上层
                     blockY = -(cc.winSize.height / 2 - this.step1Node[1].height - this.step2Node[1].height - this.blockNode.height * this.blockNode.scaleX / 2);
@@ -76,6 +87,24 @@ cc.Class({
     //游戏结束
     gameOver() {
         cc.director.loadScene('main');
+    },
+
+    //得分等级
+    showWinLevel(blockWidth, step2SpaceWidth) {
+        let levelName = '';
+        //上下两块台阶之间错位距离是50
+        if (step2SpaceWidth - blockWidth <= 5 * 2) {
+            levelName = '完美';
+        } else if (step2SpaceWidth - blockWidth <= 15 * 2) {
+            levelName = '很好';
+        } else if (step2SpaceWidth - blockWidth <= 30 * 2) {
+            levelName = '一般';
+        } else if (step2SpaceWidth - blockWidth <= 40 * 2) {
+            levelName = '很好';
+        } else if (step2SpaceWidth - blockWidth <= 50 * 2) {
+            levelName = '完美';
+        }
+        this.scoreLevelLabel.getComponent(cc.Label).string = levelName;
     },
 
     //更新游戏得分
@@ -120,5 +149,12 @@ cc.Class({
         let randColor = bgColorArr[Math.floor(Math.random() * bgColorArr.length)];
         this.node.color = cc.Color.BLACK.fromHEX(randColor);
     },
-    // update (dt) {},
+    
+    update (dt) {
+        // console.log(dt);
+        if (this.gameState == 2) {
+            this.growTimer += dt;
+            this.growTimerLabel.getComponent(cc.Label).string = this.growTimer.toFixed(2);
+        }
+    },
 });
