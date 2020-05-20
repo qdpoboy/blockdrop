@@ -151,7 +151,6 @@ cc.Class({
     },
     
     update (dt) {
-        // console.log(dt);
         if (this.gameState == 2) {
             this.growTimer += dt;
             this.growTimerLabel.getComponent(cc.Label).string = this.growTimer.toFixed(2);
